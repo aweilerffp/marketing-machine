@@ -65,7 +65,7 @@ function PublicRoute({ children }) {
 }
 
 function App() {
-  console.log('App component loaded')
+  console.log('App component loaded with full routing')
   
   return (
     <div className="min-h-screen bg-gray-50">
