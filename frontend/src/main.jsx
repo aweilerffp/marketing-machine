@@ -10,11 +10,7 @@ import App from './App.jsx'
 import './styles/index.css'
 
 // Import your Clerk Publishable Key
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
-
-if (!PUBLISHABLE_KEY) {
-  throw new Error('Missing Clerk Publishable Key. Add VITE_CLERK_PUBLISHABLE_KEY to your .env file')
-}
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || 'pk_test_Y3VkZGVkLWRlbnQtNzMuY2xlcmsuYWNjb3VudHMuZGV2JA'
 
 // Create a client for React Query
 const queryClient = new QueryClient({
