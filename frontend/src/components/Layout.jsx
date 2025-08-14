@@ -1,4 +1,5 @@
 import React from 'react'
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react'
 
 export default function Layout({ children }) {
   return (
@@ -8,6 +9,24 @@ export default function Layout({ children }) {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <h1 className="text-xl font-bold text-gray-900">Marketing Machine</h1>
+            </div>
+            <div className="flex items-center">
+              <SignedOut>
+                <SignInButton mode="modal">
+                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                    Sign In
+                  </button>
+                </SignInButton>
+              </SignedOut>
+              <SignedIn>
+                <UserButton 
+                  appearance={{
+                    elements: {
+                      avatarBox: "w-8 h-8"
+                    }
+                  }}
+                />
+              </SignedIn>
             </div>
           </div>
         </div>

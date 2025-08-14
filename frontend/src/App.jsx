@@ -1,6 +1,6 @@
 import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { useAuth } from '@/hooks/useAuth'
+import { useAuth, SignedIn, SignedOut } from '@clerk/clerk-react'
 
 // Components
 import Layout from '@/components/Layout'
@@ -20,9 +20,9 @@ import NotFoundPage from '@/pages/NotFoundPage'
 
 // Protected Route wrapper
 function ProtectedRoute({ children }) {
-  const { user, isLoading } = useAuth()
+  const { isLoaded } = useAuth()
 
-  if (isLoading) {
+  if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <LoadingSpinner size="lg" />
@@ -30,18 +30,18 @@ function ProtectedRoute({ children }) {
     )
   }
 
-  if (!user) {
-    return <Navigate to="/login" replace />
-  }
-
-  return children
+  return (
+    <SignedIn>
+      {children}
+    </SignedIn>
+  )
 }
 
 // Public Route wrapper (redirect if authenticated)
 function PublicRoute({ children }) {
-  const { user, isLoading } = useAuth()
+  const { isLoaded } = useAuth()
 
-  if (isLoading) {
+  if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <LoadingSpinner size="lg" />
@@ -49,11 +49,16 @@ function PublicRoute({ children }) {
     )
   }
 
-  if (user) {
-    return <Navigate to="/dashboard" replace />
-  }
-
-  return children
+  return (
+    <>
+      <SignedOut>
+        {children}
+      </SignedOut>
+      <SignedIn>
+        <Navigate to="/dashboard" replace />
+      </SignedIn>
+    </>
+  )
 }
 
 function App() {
