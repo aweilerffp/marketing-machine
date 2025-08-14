@@ -6,6 +6,7 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 import { Toaster } from 'react-hot-toast'
 
 import App from './App.jsx'
+import { AuthProvider } from './hooks/useAuth.jsx'
 import './styles/index.css'
 
 // Create a client for React Query
@@ -32,9 +33,10 @@ const queryClient = new QueryClient({
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <App />
-        <Toaster
+      <AuthProvider>
+        <BrowserRouter>
+          <App />
+          <Toaster
           position="top-right"
           toastOptions={{
             duration: 4000,
@@ -58,7 +60,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             },
           }}
         />
-      </BrowserRouter>
+        </BrowserRouter>
+      </AuthProvider>
       {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   </React.StrictMode>,

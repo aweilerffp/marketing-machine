@@ -1,32 +1,11 @@
 {
-  "version": 2,
-  "builds": [
+  "buildCommand": "npm run build",
+  "outputDirectory": "frontend/dist",
+  "installCommand": "npm install",
+  "rewrites": [
     {
-      "src": "backend/server.js",
-      "use": "@vercel/node"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "backend/server.js"
-    },
-    {
-      "src": "/health",
-      "dest": "backend/server.js"
-    },
-    {
-      "src": "/webhook/(.*)",
-      "dest": "backend/server.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/api/404.html"
-    }
-  ],
-  "installCommand": "cd backend && npm install",
-  "buildCommand": "cd backend && npm run build || echo 'No build step required'",
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }

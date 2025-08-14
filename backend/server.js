@@ -17,7 +17,7 @@ const { connectDatabase } = require('./src/config/database');
 const { connectRedis } = require('./src/config/redis');
 const { initializeQueue } = require('./src/config/queue');
 const routes = require('./src/routes');
-const errorHandler = require('./src/middleware/errorHandler');
+const { errorHandler } = require('./src/middleware/errorHandler');
 const { startWebhookServer } = require('./src/services/webhook/webhookServer');
 
 // Initialize Express app
