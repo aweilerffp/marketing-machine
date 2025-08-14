@@ -1,0 +1,32 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "backend/server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/health",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/webhook/(.*)",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/api/404.html"
+    }
+  ],
+  "installCommand": "cd backend && npm install",
+  "buildCommand": "cd backend && npm run build || echo 'No build step required'",
+  "env": {
+    "NODE_ENV": "production"
+  }
+}

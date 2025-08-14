@@ -16,6 +16,7 @@ const imageRoutes = require('./images');
 const aiRoutes = require('./ai');
 const publishingRoutes = require('./publishing');
 const analyticsRoutes = require('./analytics');
+const approvalRoutes = require('./approval');
 
 // Import middleware
 const { authenticateToken } = require('../middleware/auth');
@@ -37,7 +38,8 @@ router.get('/', (req, res) => {
       webhooks: '/api/webhooks/*',
       ai: '/api/ai/*',
       publishing: '/api/publishing/*',
-      analytics: '/api/analytics/*'
+      analytics: '/api/analytics/*',
+      approval: '/api/approval/*'
     },
     status: 'operational',
     timestamp: new Date().toISOString()
@@ -118,6 +120,9 @@ router.use('/publishing', publishingRoutes);
 
 // Analytics and reporting
 router.use('/analytics', analyticsRoutes);
+
+// Content approval workflow
+router.use('/approval', approvalRoutes);
 
 // =============================================
 // ERROR HANDLING

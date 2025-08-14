@@ -12,6 +12,7 @@ import LoginPage from '@/pages/LoginPage'
 import DashboardPage from '@/pages/DashboardPage'
 import ContentInputPage from '@/pages/ContentInputPage'
 import ApprovalPage from '@/pages/ApprovalPage'
+import ApprovalDashboard from '@/pages/ApprovalDashboard'
 import AnalyticsPage from '@/pages/AnalyticsPage'
 import SettingsPage from '@/pages/SettingsPage'
 import NotFoundPage from '@/pages/NotFoundPage'
@@ -102,7 +103,7 @@ function App() {
           element={
             <ProtectedRoute>
               <Layout>
-                <ApprovalPage />
+                <ApprovalDashboard />
               </Layout>
             </ProtectedRoute>
           } 
