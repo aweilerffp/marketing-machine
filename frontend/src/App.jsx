@@ -13,6 +13,7 @@ import DashboardPage from '@/pages/DashboardPage'
 import ContentInputPage from '@/pages/ContentInputPage'
 import ApprovalPage from '@/pages/ApprovalPage'
 import ApprovalDashboard from '@/pages/ApprovalDashboard'
+import PublishingDashboard from '@/pages/PublishingDashboard'
 import AnalyticsPage from '@/pages/AnalyticsPage'
 import SettingsPage from '@/pages/SettingsPage'
 import NotFoundPage from '@/pages/NotFoundPage'
@@ -104,6 +105,16 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <ApprovalDashboard />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/publishing" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <PublishingDashboard />
               </Layout>
             </ProtectedRoute>
           } 

@@ -3,7 +3,7 @@
  * Centralized error handling middleware
  */
 
-const logger = require('../utils/logger').createComponentLogger('error-handler');
+const logger = require('../utils/logger');
 
 /**
  * Global error handling middleware

@@ -5,7 +5,7 @@
 
 const jwt = require('jsonwebtoken');
 const { query } = require('../config/database');
-const logger = require('../utils/logger').auth;
+const logger = require('../utils/logger');
 const { UnauthorizedError, ForbiddenError } = require('./errorHandler');
 
 /**

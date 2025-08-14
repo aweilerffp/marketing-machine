@@ -125,41 +125,25 @@ function setupQueueEventHandlers() {
  * Set up job processors
  */
 function setupJobProcessors() {
-  // Import job processors
-  const { processContent } = require('../services/ai/contentProcessor');
-  const { processImageGeneration } = require('../services/ai/imageProcessor');
-  const { processPublishing } = require('../services/publishing/publishProcessor');
+  try {
+    // Import job processors
+    const {
+      processLinkedInPublishing,
+      processAnalyticsCollection,
+      processBatchPublishing,
+      processPerformanceAnalysis
+    } = require('../services/publishing/queueProcessors');
 
-  // Content Processing Jobs
-  contentProcessingQueue.process('generate-hooks', 2, async (job) => {
-    const { contentSourceId, companyId } = job.data;
-    logger.info('Processing hooks generation job', { contentSourceId, companyId });
-    
-    return await processContent.generateHooks(contentSourceId, companyId);
-  });
+    // Publishing Jobs
+    publishingQueue.process('publish-to-linkedin', 3, processLinkedInPublishing);
+    publishingQueue.process('collect-linkedin-analytics', 2, processAnalyticsCollection);
+    publishingQueue.process('batch-publishing', 1, processBatchPublishing);
+    publishingQueue.process('performance-analysis', 1, processPerformanceAnalysis);
 
-  contentProcessingQueue.process('generate-posts', 3, async (job) => {
-    const { hookIds, companyId } = job.data;
-    logger.info('Processing posts generation job', { hookIds, companyId });
-    
-    return await processContent.generatePosts(hookIds, companyId);
-  });
-
-  // Image Generation Jobs
-  imageGenerationQueue.process('generate-image', 1, async (job) => {
-    const { postId, imageModel, prompt } = job.data;
-    logger.info('Processing image generation job', { postId, imageModel });
-    
-    return await processImageGeneration(postId, imageModel, prompt);
-  });
-
-  // Publishing Jobs
-  publishingQueue.process('publish-post', 5, async (job) => {
-    const { postId, platform, scheduledTime } = job.data;
-    logger.info('Processing publishing job', { postId, platform, scheduledTime });
-    
-    return await processPublishing(postId, platform, scheduledTime);
-  });
+    logger.info('Publishing queue processors set up successfully');
+  } catch (error) {
+    logger.error('Failed to set up queue processors:', error.message);
+  }
 }
 
 /**
@@ -223,12 +207,13 @@ async function addImageJob(jobData, options = {}) {
 
 /**
  * Add job to publishing queue
+ * @param {string} jobType - Type of job (publish-to-linkedin, collect-linkedin-analytics, etc.)
  * @param {Object} jobData - Job data  
  * @param {Object} options - Job options
  */
-async function addPublishingJob(jobData, options = {}) {
+async function addPublishingJob(jobType, jobData, options = {}) {
   try {
-    const job = await publishingQueue.add('publish-post', jobData, {
+    const job = await publishingQueue.add(jobType, jobData, {
       priority: options.priority || 0,
       delay: options.delay || 0,
       ...options
@@ -236,12 +221,14 @@ async function addPublishingJob(jobData, options = {}) {
 
     logger.info('Publishing job added to queue', {
       jobId: job.id,
+      jobType,
       data: jobData
     });
 
     return job;
   } catch (error) {
     logger.error('Failed to add publishing job to queue', {
+      jobType,
       data: jobData,
       error: error.message
     });
