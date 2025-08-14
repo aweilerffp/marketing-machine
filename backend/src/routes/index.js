@@ -11,6 +11,8 @@ const authRoutes = require('./auth');
 const companyRoutes = require('./companies');
 const contentRoutes = require('./content');
 const webhookRoutes = require('./webhooks');
+const postRoutes = require('./posts');
+const imageRoutes = require('./images');
 const aiRoutes = require('./ai');
 const publishingRoutes = require('./publishing');
 const analyticsRoutes = require('./analytics');
@@ -30,6 +32,8 @@ router.get('/', (req, res) => {
       auth: '/api/auth/*',
       companies: '/api/companies/*',
       content: '/api/content/*',
+      posts: '/api/posts/*',
+      images: '/api/images/*',
       webhooks: '/api/webhooks/*',
       ai: '/api/ai/*',
       publishing: '/api/publishing/*',
@@ -99,6 +103,12 @@ router.use('/companies', companyRoutes);
 
 // Content management (manual input, processing)
 router.use('/content', contentRoutes);
+
+// LinkedIn posts management
+router.use('/posts', postRoutes);
+
+// AI-generated images management
+router.use('/images', imageRoutes);
 
 // AI services (hooks, posts, images)
 router.use('/ai', aiRoutes);

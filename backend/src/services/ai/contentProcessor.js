@@ -114,19 +114,50 @@ class ContentProcessor {
    */
   async generatePosts(hookIds, companyId) {
     try {
-      logger.info('Starting post generation process', { hookIds, companyId });
+      logger.info('Starting LinkedIn post generation process', { hookIds, companyId });
 
-      // This will be implemented in the next step (LinkedIn post generation)
-      // For now, return placeholder response
+      // Get hooks data
+      const hooks = await this.getHooksByIds(hookIds);
+      if (!hooks.length) {
+        throw new Error('No hooks found for post generation');
+      }
+
+      // Get company profile
+      const companyProfile = await this.getCompanyProfile(companyId);
+      if (!companyProfile) {
+        throw new Error('Company profile not found');
+      }
+
+      // Initialize post generator
+      const PostGenerator = require('./postGenerator');
+      const postGenerator = new PostGenerator();
+
+      // Generate LinkedIn posts
+      const generatedPosts = await postGenerator.generatePosts(hooks, companyProfile);
+
+      // Store posts in database
+      const storedPosts = await postGenerator.storePosts(generatedPosts, hooks, companyId);
+
+      logger.info('LinkedIn post generation completed', {
+        hooksProcessed: hooks.length,
+        postsGenerated: storedPosts.length,
+        companyId
+      });
+
       return {
         success: true,
-        message: 'Post generation will be implemented in next phase',
-        hookIds,
-        companyId
+        postsGenerated: storedPosts.length,
+        posts: storedPosts.map(p => ({
+          id: p.id,
+          post_content: p.post_content.substring(0, 100) + '...',
+          character_count: p.character_count,
+          performance_score: p.performance_score,
+          status: p.status
+        }))
       };
 
     } catch (error) {
-      logger.error('Post generation failed', {
+      logger.error('LinkedIn post generation failed', {
         error: error.message,
         hookIds,
         companyId
@@ -468,6 +499,52 @@ class ContentProcessor {
       logger.error('Error getting hooks for batch', {
         error: error.message,
         batchId
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Get hooks by IDs
+   * @param {Array} hookIds - Array of hook IDs
+   * @returns {Promise<Array>} Hooks
+   */
+  async getHooksByIds(hookIds) {
+    try {
+      if (!hookIds.length) return [];
+
+      const placeholders = hookIds.map((_, i) => `$${i + 1}`).join(',');
+      
+      const result = await query(`
+        SELECT *
+        FROM marketing_hooks
+        WHERE id IN (${placeholders})
+        ORDER BY priority DESC, relevance_score DESC
+      `, hookIds);
+
+      return result.rows.map(hook => ({
+        id: hook.id,
+        uuid: hook.uuid,
+        hook_text: hook.hook_text,
+        hook_type: hook.hook_type,
+        content_pillar: hook.content_pillar,
+        source_quote: hook.source_quote,
+        source_context: hook.source_context,
+        linkedin_hook: hook.linkedin_hook,
+        tweet_version: hook.tweet_version,
+        blog_title: hook.blog_title,
+        target_emotion: hook.target_emotion,
+        relevance_score: hook.relevance_score,
+        engagement_potential: hook.engagement_prediction,
+        priority: hook.priority,
+        status: hook.status,
+        created_at: hook.created_at
+      }));
+
+    } catch (error) {
+      logger.error('Error getting hooks by IDs', {
+        error: error.message,
+        hookIds
       });
       throw error;
     }
