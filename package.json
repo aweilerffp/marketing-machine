@@ -1,0 +1,42 @@
+{
+  "name": "marketing-machine",
+  "version": "1.0.0",
+  "description": "An automated LinkedIn content creation system that transforms meeting recordings into high-quality social media posts",
+  "main": "server.js",
+  "scripts": {
+    "dev": "concurrently \"npm run backend:dev\" \"npm run frontend:dev\"",
+    "backend:dev": "cd backend && npm run dev",
+    "frontend:dev": "cd frontend && npm run dev",
+    "start": "cd backend && npm start",
+    "build": "cd frontend && npm run build",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && npm test",
+    "test:frontend": "cd frontend && npm test",
+    "db:migrate": "cd backend && npm run migrate",
+    "db:seed": "cd backend && npm run seed",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:frontend": "cd frontend && npm run lint",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "deploy": "echo 'Deployment will be configured for Hetzner VPS'"
+  },
+  "keywords": [
+    "marketing",
+    "linkedin",
+    "automation",
+    "ai",
+    "content-generation",
+    "meeting-transcripts",
+    "social-media"
+  ],
+  "author": "Marketing Machine",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
