@@ -1,9 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
+import { ClerkProvider, SignedIn, SignedOut, SignInButton, UserButton, useAuth } from '@clerk/clerk-react'
 import './styles/index.css'
 
-console.log('Main.jsx loaded with routing')
+console.log('Main.jsx loaded with Clerk authentication')
+
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || 'pk_test_Y3VkZGVkLWRlbnQtNzMuY2xlcmsuYWNjb3VudHMuZGV2JA'
+console.log('Clerk key loaded:', !!PUBLISHABLE_KEY)
 
 // Simple Home component
 function HomePage() {
@@ -13,20 +17,36 @@ function HomePage() {
       <p className="text-gray-600 mb-6">
         Transform your meeting recordings into engaging LinkedIn content with AI.
       </p>
-      <div className="space-x-4">
-        <Link 
-          to="/login" 
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium"
-        >
-          Sign In
-        </Link>
-        <Link 
-          to="/dashboard" 
-          className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-md font-medium"
-        >
-          Dashboard
-        </Link>
-      </div>
+      
+      <SignedOut>
+        <div className="space-x-4">
+          <SignInButton mode="modal">
+            <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium">
+              Sign In
+            </button>
+          </SignInButton>
+          <Link 
+            to="/login" 
+            className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-md font-medium"
+          >
+            Login Page
+          </Link>
+        </div>
+      </SignedOut>
+      
+      <SignedIn>
+        <div className="space-y-4">
+          <p className="text-green-600 font-medium">✅ You are signed in!</p>
+          <div className="space-x-4">
+            <Link 
+              to="/dashboard" 
+              className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md font-medium"
+            >
+              Go to Dashboard
+            </Link>
+          </div>
+        </div>
+      </SignedIn>
     </div>
   )
 }
@@ -47,12 +67,36 @@ function LoginPage() {
   )
 }
 
-// Simple Dashboard component  
+// Protected Dashboard component  
 function DashboardPage() {
+  const { isLoaded, isSignedIn } = useAuth()
+  
+  if (!isLoaded) {
+    return <div className="text-center">Loading...</div>
+  }
+  
+  if (!isSignedIn) {
+    return (
+      <div className="text-center">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h2>
+        <p className="text-gray-600 mb-6">You need to sign in to access the dashboard.</p>
+        <Link 
+          to="/" 
+          className="text-blue-600 hover:text-blue-800"
+        >
+          ← Back to Home
+        </Link>
+      </div>
+    )
+  }
+  
   return (
     <div className="text-center">
+      <div className="mb-4">
+        <UserButton />
+      </div>
       <h2 className="text-2xl font-bold text-gray-900 mb-4">Dashboard</h2>
-      <p className="text-gray-600 mb-6">Your content dashboard will appear here.</p>
+      <p className="text-gray-600 mb-6">Welcome to your content dashboard!</p>
       <Link 
         to="/" 
         className="text-blue-600 hover:text-blue-800"
@@ -98,12 +142,14 @@ if (!root) {
   try {
     ReactDOM.createRoot(root).render(
       <React.StrictMode>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ClerkProvider>
       </React.StrictMode>
     )
-    console.log('App with routing rendered successfully')
+    console.log('App with Clerk authentication rendered successfully')
   } catch (error) {
     console.error('Failed to render app:', error)
     document.body.innerHTML = `
