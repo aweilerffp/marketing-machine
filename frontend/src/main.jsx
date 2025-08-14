@@ -1,91 +1,81 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from 'react-query'
-import { ReactQueryDevtools } from 'react-query/devtools'
-import { Toaster } from 'react-hot-toast'
-import { ClerkProvider } from '@clerk/clerk-react'
 
-import App from './App.jsx'
-import './styles/index.css'
+console.log('Main.jsx loaded successfully')
 
-console.log('Main.jsx loaded')
+const root = document.getElementById('root')
+console.log('Root element found:', !!root)
 
-// Import your Clerk Publishable Key
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || 'pk_test_Y3VkZGVkLWRlbnQtNzMuY2xlcmsuYWNjb3VudHMuZGV2JA'
-
-console.log('Clerk key:', PUBLISHABLE_KEY ? 'Found' : 'Missing')
-
-// Create a client for React Query
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: (failureCount, error) => {
-        // Don't retry on 4xx errors
-        if (error?.response?.status >= 400 && error?.response?.status < 500) {
-          return false
-        }
-        return failureCount < 3
-      },
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      cacheTime: 10 * 60 * 1000, // 10 minutes
-    },
-    mutations: {
-      retry: 1,
-    },
-  },
-})
-
-try {
-  ReactDOM.createRoot(document.getElementById('root')).render(
-    <React.StrictMode>
-      <ClerkProvider 
-        publishableKey={PUBLISHABLE_KEY}
-        afterSignOutUrl="/"
-      >
-        <QueryClientProvider client={queryClient}>
-          <BrowserRouter>
-            <App />
-            <Toaster
-              position="top-right"
-              toastOptions={{
-                duration: 4000,
-                style: {
-                  background: '#363636',
-                  color: '#fff',
-                },
-                success: {
-                  duration: 3000,
-                  iconTheme: {
-                    primary: '#22c55e',
-                    secondary: '#fff',
-                  },
-                },
-                error: {
-                  duration: 5000,
-                  iconTheme: {
-                    primary: '#ef4444',
-                    secondary: '#fff',
-                  },
-                },
-              }}
-            />
-          </BrowserRouter>
-          {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
-        </QueryClientProvider>
-      </ClerkProvider>
-    </React.StrictMode>,
-  )
-  console.log('App rendered successfully')
-} catch (error) {
-  console.error('Failed to render app:', error)
-  // Fallback render without Clerk
-  ReactDOM.createRoot(document.getElementById('root')).render(
-    <div style={{ padding: '20px', textAlign: 'center' }}>
-      <h1>Marketing Machine</h1>
-      <p>Loading...</p>
-      <p style={{ color: 'red' }}>Error: {error.message}</p>
-    </div>
-  )
+if (!root) {
+  document.body.innerHTML = '<div style="padding: 20px; text-align: center;"><h1>Error: No root element found</h1></div>'
+} else {
+  try {
+    ReactDOM.createRoot(root).render(
+      <div style={{ 
+        minHeight: '100vh', 
+        backgroundColor: '#f9fafb', 
+        padding: '20px',
+        fontFamily: 'Inter, sans-serif',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <h1 style={{ 
+          fontSize: '3rem', 
+          fontWeight: 'bold', 
+          color: '#111827', 
+          marginBottom: '1rem',
+          textAlign: 'center'
+        }}>
+          Marketing Machine
+        </h1>
+        <p style={{ 
+          fontSize: '1.25rem', 
+          color: '#6b7280', 
+          marginBottom: '2rem',
+          textAlign: 'center'
+        }}>
+          🎉 Success! The app is now working on Vercel
+        </p>
+        <div style={{
+          backgroundColor: 'white',
+          padding: '2rem',
+          borderRadius: '0.5rem',
+          boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+          maxWidth: '600px',
+          textAlign: 'center'
+        }}>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: '600', marginBottom: '1rem' }}>
+            Next Steps
+          </h2>
+          <p style={{ color: '#6b7280', marginBottom: '1rem' }}>
+            Now that we've confirmed the deployment works, we can add back the authentication and full functionality.
+          </p>
+          <div style={{ 
+            backgroundColor: '#f3f4f6', 
+            padding: '1rem', 
+            borderRadius: '0.25rem',
+            fontFamily: 'monospace',
+            fontSize: '0.875rem'
+          }}>
+            Environment: {import.meta.env.MODE}<br/>
+            Build: {new Date().toISOString()}
+          </div>
+        </div>
+      </div>
+    )
+    console.log('App rendered successfully')
+  } catch (error) {
+    console.error('Failed to render app:', error)
+    document.body.innerHTML = `
+      <div style="padding: 20px; text-align: center;">
+        <h1>Render Error</h1>
+        <p style="color: red;">Error: ${error.message}</p>
+        <pre style="text-align: left; background: #f5f5f5; padding: 10px; border-radius: 5px;">
+${error.stack}
+        </pre>
+      </div>
+    `
+  }
 }
