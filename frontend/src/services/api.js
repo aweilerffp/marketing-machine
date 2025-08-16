@@ -11,7 +11,7 @@ const api = axios.create({
 
 // Request interceptor
 api.interceptors.request.use(
-  (config) => {
+  async (config) => {
     // Add timestamp to prevent caching
     if (config.method === 'get') {
       config.params = {
@@ -19,6 +19,9 @@ api.interceptors.request.use(
         _t: Date.now()
       }
     }
+
+    // Add Clerk token if available (will be set by components using useAuth)
+    // Token will be added by authenticated components
 
     // Log requests in development
     if (import.meta.env.DEV) {
@@ -194,7 +197,72 @@ export const webhookAPI = {
   getDeliveries: (configId) => api.get(`/webhooks/deliveries/${configId}`),
 }
 
-// Health check
-export const healthCheck = () => api.get('/health')
+// Health check (use root endpoint which has more detailed health info)
+export const healthCheck = () => axios.get('http://localhost:3001/health')
+
+// Create authenticated API instance with Clerk token
+export const createAuthenticatedAPI = (getToken) => {
+  const authAPI = axios.create({
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3001/api',
+    timeout: 30000,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+
+  // Add Clerk token to requests
+  authAPI.interceptors.request.use(
+    async (config) => {
+      try {
+        const token = await getToken()
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`
+        }
+      } catch (error) {
+        console.warn('Failed to get Clerk token:', error)
+      }
+
+      // Add timestamp to prevent caching
+      if (config.method === 'get') {
+        config.params = {
+          ...config.params,
+          _t: Date.now()
+        }
+      }
+
+      // Log requests in development
+      if (import.meta.env.DEV) {
+        console.log(`🔵 ${config.method?.toUpperCase()} ${config.url}`, config.data)
+      }
+
+      return config
+    },
+    (error) => {
+      console.error('Auth API Request error:', error)
+      return Promise.reject(error)
+    }
+  )
+
+  // Response interceptor
+  authAPI.interceptors.response.use(
+    (response) => {
+      if (import.meta.env.DEV) {
+        console.log(`🟢 ${response.status} ${response.config.url}`, response.data)
+      }
+      return response
+    },
+    (error) => {
+      if (import.meta.env.DEV) {
+        console.error(`🔴 ${error.response?.status || 'Network'} ${error.config?.url}`, {
+          message: error.response?.data?.error?.message || error.message,
+          data: error.response?.data
+        })
+      }
+      return Promise.reject(error)
+    }
+  )
+
+  return authAPI
+}
 
 export default api

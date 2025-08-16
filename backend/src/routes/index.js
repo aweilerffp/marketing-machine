@@ -20,6 +20,7 @@ const approvalRoutes = require('./approval');
 
 // Import middleware
 const { authenticateToken } = require('../middleware/auth');
+const { authenticateClerkToken } = require('../middleware/clerk-auth');
 const { validateRequest } = require('../middleware/validation');
 
 // API Documentation
@@ -97,8 +98,8 @@ router.use('/webhooks', webhookRoutes);
 // PROTECTED ROUTES (Authentication required)
 // =============================================
 
-// Apply authentication middleware to all routes below this point
-router.use(authenticateToken);
+// Apply Clerk authentication middleware to all routes below this point
+router.use(authenticateClerkToken);
 
 // Company management
 router.use('/companies', companyRoutes);
