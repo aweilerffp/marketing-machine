@@ -272,3 +272,8 @@
   outline: 2px solid theme('colors.primary.500');
   outline-offset: 2px;
 }
+/* Spinner animation for debug */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

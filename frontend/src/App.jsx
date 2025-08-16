@@ -113,6 +113,10 @@ function HomePage() {
 }
 
 function SignInPage() {
+  const { isLoaded } = useAuth()
+  
+  console.log('SignInPage rendering, Clerk isLoaded:', isLoaded)
+  
   return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', backgroundColor: '#f9fafb' }}>
       <div style={{ width: '100%', maxWidth: '400px' }}>
@@ -131,58 +135,40 @@ function SignInPage() {
           </p>
         </div>
         
-        {/* Debug container for Clerk */}
-        <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-          <SignIn 
-            routing="path" 
-            path="/sign-in"
-            afterSignInUrl="/dashboard"
-            signUpUrl="/sign-up"
-            appearance={{
-              elements: {
-                rootBox: {
-                  width: '100%'
-                },
-                card: {
-                  backgroundColor: 'white',
-                  boxShadow: 'none'
+        {/* Show loading state */}
+        {!isLoaded && (
+          <div style={{ textAlign: 'center', padding: '40px' }}>
+            <div style={{ display: 'inline-block', width: '32px', height: '32px', border: '3px solid #f3f3f3', borderTop: '3px solid #2563eb', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+            <p style={{ marginTop: '16px', color: '#6b7280' }}>Loading Clerk...</p>
+          </div>
+        )}
+        
+        {/* Clerk component container */}
+        {isLoaded && (
+          <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+            <SignIn 
+              afterSignInUrl="/dashboard"
+              signUpUrl="/sign-up"
+              appearance={{
+                elements: {
+                  rootBox: {
+                    width: '100%'
+                  },
+                  card: {
+                    backgroundColor: 'white',
+                    boxShadow: 'none'
+                  }
                 }
-              }
-            }}
-          />
-          
-          {/* Fallback content */}
-          <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#fef3c7', borderRadius: '4px' }}>
-            <p style={{ fontSize: '0.75rem', color: '#92400e', marginBottom: '10px' }}>
-              Debug: Clerk SignIn component should appear above. If not visible, there may be a Clerk loading issue.
-            </p>
-            <p style={{ fontSize: '0.75rem', color: '#92400e' }}>
-              Clerk Key: {import.meta.env.VITE_CLERK_PUBLISHABLE_KEY ? 'Found' : 'Missing'}
-            </p>
-          </div>
-          
-          {/* Temporary fallback form */}
-          <div style={{ marginTop: '20px', padding: '20px', backgroundColor: '#f3f4f6', borderRadius: '6px' }}>
-            <p style={{ fontSize: '0.875rem', fontWeight: '500', marginBottom: '16px', color: '#374151' }}>
-              Fallback Authentication (Demo)
-            </p>
-            <button 
-              onClick={() => window.location.href = '/dashboard'}
-              style={{
-                width: '100%',
-                backgroundColor: '#2563eb',
-                color: 'white',
-                padding: '12px',
-                borderRadius: '6px',
-                border: 'none',
-                fontSize: '1rem',
-                fontWeight: '500',
-                cursor: 'pointer'
               }}
-            >
-              Continue as Demo User
-            </button>
+            />
           </div>
+        )}
+        
+        {/* Debug info */}
+        <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#fef3c7', borderRadius: '4px' }}>
+          <p style={{ fontSize: '0.75rem', color: '#92400e' }}>
+            Debug - Clerk loaded: {isLoaded ? 'Yes' : 'No'} | Key: {import.meta.env.VITE_CLERK_PUBLISHABLE_KEY ? 'Found' : 'Missing'}
+          </p>
         </div>
       </div>
     </div>
@@ -211,8 +197,6 @@ function SignUpPage() {
         {/* Debug container for Clerk */}
         <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
           <SignUp 
-            routing="path" 
-            path="/sign-up"
             afterSignUpUrl="/dashboard"
             signInUrl="/sign-in"
             appearance={{

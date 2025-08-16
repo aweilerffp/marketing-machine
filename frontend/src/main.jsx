@@ -29,10 +29,6 @@ if (!root) {
       <React.StrictMode>
         <ClerkProvider 
           publishableKey={PUBLISHABLE_KEY}
-          afterSignInUrl="/dashboard"
-          afterSignUpUrl="/dashboard"
-          signInUrl="/sign-in"
-          signUpUrl="/sign-up"
         >
           <BrowserRouter>
             <App />
