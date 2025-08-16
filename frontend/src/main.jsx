@@ -51,4 +51,4 @@ if (!root) {
       </div>
     `
   }
-}
+}console.log('Marketing Machine App Starting...', import.meta.env.VITE_CLERK_PUBLISHABLE_KEY ? 'Clerk key found' : 'Clerk key missing')
