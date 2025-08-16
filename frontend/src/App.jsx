@@ -49,72 +49,65 @@ function Layout({ children }) {
   )
 }
 
-// Pages
+// Test HomePage with forced visible content
 function HomePage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <Link to="/" className="text-xl font-bold text-gray-900">
-                Marketing Machine
-              </Link>
-            </div>
-            <div className="flex items-center space-x-4">
-              <SignedOut>
-                <Link 
-                  to="/sign-in"
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
-                >
-                  Sign In
-                </Link>
-              </SignedOut>
-            </div>
-          </div>
+    <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', padding: '20px' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+        <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#111827', marginBottom: '16px' }}>
+          Marketing Machine
+        </h1>
+        <p style={{ fontSize: '1.25rem', color: '#6b7280', marginBottom: '32px' }}>
+          Transform your meeting recordings into engaging LinkedIn content
+        </p>
+        
+        {/* Always show buttons for debugging */}
+        <div style={{ marginBottom: '20px' }}>
+          <Link 
+            to="/sign-in"
+            style={{
+              display: 'inline-block',
+              backgroundColor: '#2563eb',
+              color: 'white',
+              padding: '12px 32px',
+              borderRadius: '6px',
+              textDecoration: 'none',
+              fontSize: '1.125rem',
+              fontWeight: '500',
+              marginRight: '16px'
+            }}
+          >
+            Get Started Now
+          </Link>
+          <Link 
+            to="/sign-up"
+            style={{
+              display: 'inline-block',
+              border: '1px solid #2563eb',
+              color: '#2563eb',
+              backgroundColor: 'white',
+              padding: '12px 32px',
+              borderRadius: '6px',
+              textDecoration: 'none',
+              fontSize: '1.125rem',
+              fontWeight: '500'
+            }}
+          >
+            Create Account
+          </Link>
         </div>
-      </nav>
-      
-      <main className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <div className="text-center py-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Marketing Machine</h1>
-          <p className="text-xl text-gray-600 mb-8">Transform your meeting recordings into engaging LinkedIn content</p>
-          
-          <SignedOut>
-            <div className="space-y-4">
-              <div>
-                <Link 
-                  to="/sign-in"
-                  className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-md text-lg font-medium mr-4"
-                >
-                  Get Started Now
-                </Link>
-                <Link 
-                  to="/sign-up"
-                  className="inline-block border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-8 py-3 rounded-md text-lg font-medium"
-                >
-                  Create Account
-                </Link>
-              </div>
-              <p className="text-sm text-gray-500">
-                Professional AI-powered content creation
-              </p>
-            </div>
-          </SignedOut>
-          
-          <SignedIn>
-            <div className="space-y-4">
-              <p className="text-green-600 font-medium">Welcome back! Ready to create amazing content?</p>
-              <Link 
-                to="/dashboard" 
-                className="inline-block bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-md text-lg font-medium"
-              >
-                Go to Dashboard
-              </Link>
-            </div>
-          </SignedIn>
+        
+        <p style={{ fontSize: '0.875rem', color: '#6b7280' }}>
+          Professional AI-powered content creation
+        </p>
+        
+        {/* Debug info */}
+        <div style={{ marginTop: '40px', padding: '20px', backgroundColor: '#fef3c7', borderRadius: '6px' }}>
+          <p style={{ fontSize: '0.875rem', color: '#92400e' }}>
+            Debug: If you see this, React is working. Clerk status: Loading...
+          </p>
         </div>
-      </main>
+      </div>
     </div>
   )
 }
@@ -572,66 +565,64 @@ function ProtectedRoute({ children }) {
 // Main App Component
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<HomePage />} />
-        <Route path="/sign-in" element={<SignInPage />} />
-        <Route path="/sign-up" element={<SignUpPage />} />
+    <Routes>
+      {/* Public Routes */}
+      <Route path="/" element={<HomePage />} />
+      <Route path="/sign-in" element={<SignInPage />} />
+      <Route path="/sign-up" element={<SignUpPage />} />
 
-        {/* Protected Routes */}
-        <Route 
-          path="/dashboard" 
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <DashboardPage />
-              </Layout>
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/content" 
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <ContentPage />
-              </Layout>
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/analytics" 
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <AnalyticsPage />
-              </Layout>
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/profile" 
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <ProfilePage />
-              </Layout>
-            </ProtectedRoute>
-          } 
-        />
+      {/* Protected Routes */}
+      <Route 
+        path="/dashboard" 
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <DashboardPage />
+            </Layout>
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/content" 
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <ContentPage />
+            </Layout>
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/analytics" 
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <AnalyticsPage />
+            </Layout>
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/profile" 
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <ProfilePage />
+            </Layout>
+          </ProtectedRoute>
+        } 
+      />
 
-        {/* 404 Route */}
-        <Route path="*" element={
-          <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-            <div className="text-center">
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">404 - Page Not Found</h1>
-              <Link to="/" className="text-blue-600 hover:text-blue-800">← Back to Home</Link>
-            </div>
+      {/* 404 Route */}
+      <Route path="*" element={
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">404 - Page Not Found</h1>
+            <Link to="/" className="text-blue-600 hover:text-blue-800">← Back to Home</Link>
           </div>
-        } />
-      </Routes>
-    </div>
+        </div>
+      } />
+    </Routes>
   )
 }
 
