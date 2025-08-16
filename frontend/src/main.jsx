@@ -52,3 +52,4 @@ if (!root) {
     `
   }
 }console.log('Marketing Machine App Starting...', import.meta.env.VITE_CLERK_PUBLISHABLE_KEY ? 'Clerk key found' : 'Clerk key missing')
+// Force rebuild Sat Aug 16 03:14:39 AM CEST 2025
