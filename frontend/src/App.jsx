@@ -101,12 +101,6 @@ function HomePage() {
           Professional AI-powered content creation
         </p>
         
-        {/* Debug info */}
-        <div style={{ marginTop: '40px', padding: '20px', backgroundColor: '#fef3c7', borderRadius: '6px' }}>
-          <p style={{ fontSize: '0.875rem', color: '#92400e' }}>
-            Debug: If you see this, React is working. Clerk status: Loading...
-          </p>
-        </div>
       </div>
     </div>
   )
@@ -114,31 +108,13 @@ function HomePage() {
 
 function SignInPage() {
   const { isLoaded, isSignedIn } = useAuth()
-  const clerk = useClerk()
   const [showTimeout, setShowTimeout] = React.useState(false)
-  const [debugInfo, setDebugInfo] = React.useState({})
-  
-  console.log('SignInPage rendering, Clerk isLoaded:', isLoaded, 'isSignedIn:', isSignedIn)
-  console.log('Clerk instance:', clerk)
-  
-  // Collect debug info
-  React.useEffect(() => {
-    setDebugInfo({
-      clerkExists: !!clerk,
-      isLoaded,
-      isSignedIn,
-      publishableKey: import.meta.env.VITE_CLERK_PUBLISHABLE_KEY?.substring(0, 20) + '...',
-      userAgent: navigator.userAgent,
-      url: window.location.href
-    })
-  }, [clerk, isLoaded, isSignedIn])
   
   // Show timeout message if Clerk doesn't load within 10 seconds
   React.useEffect(() => {
     const timer = setTimeout(() => {
       if (!isLoaded) {
         setShowTimeout(true)
-        console.error('Clerk failed to load within 10 seconds')
       }
     }, 10000)
     
@@ -235,15 +211,6 @@ function SignInPage() {
           </div>
         )}
         
-        {/* Debug info */}
-        <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#fef3c7', borderRadius: '4px' }}>
-          <p style={{ fontSize: '0.75rem', color: '#92400e', fontWeight: '600', marginBottom: '8px' }}>
-            Debug Information:
-          </p>
-          <pre style={{ fontSize: '0.6rem', color: '#92400e', margin: 0, whiteSpace: 'pre-wrap' }}>
-            {JSON.stringify(debugInfo, null, 2)}
-          </pre>
-        </div>
       </div>
     </div>
   )
@@ -286,12 +253,6 @@ function SignUpPage() {
             }}
           />
           
-          {/* Fallback content */}
-          <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#fef3c7', borderRadius: '4px' }}>
-            <p style={{ fontSize: '0.75rem', color: '#92400e' }}>
-              Debug: Clerk SignUp component should appear above. If not visible, there may be a Clerk loading issue.
-            </p>
-          </div>
         </div>
       </div>
     </div>
