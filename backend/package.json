@@ -52,6 +52,7 @@
   "jest": {
     "testEnvironment": "node",
     "coverageDirectory": "coverage",
+    "setupFilesAfterEnv": ["<rootDir>/tests/setup.js"],
     "collectCoverageFrom": [
       "src/**/*.js",
       "!src/scripts/**",
