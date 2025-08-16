@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clerk Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; }
+        .debug { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Clerk Authentication Test</h1>
+        
+        <div class="debug">
+            <h3>Environment Check:</h3>
+            <p>Clerk Key: pk_test_Y3VkZGVkLWRlbnQtNzMuY2xlcmsuYWNjb3VudHMuZGV2JA</p>
+            <p>URL: <span id="current-url"></span></p>
+        </div>
+        
+        <div id="clerk-container">
+            <p>Loading Clerk...</p>
+        </div>
+        
+        <div class="debug">
+            <h3>Console Output:</h3>
+            <div id="console-output"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('current-url').textContent = window.location.href;
+        
+        const consoleDiv = document.getElementById('console-output');
+        function log(message) {
+            console.log(message);
+            consoleDiv.innerHTML += '<p>' + message + '</p>';
+        }
+        
+        log('Starting Clerk test...');
+        
+        // Load Clerk script
+        const script = document.createElement('script');
+        script.src = 'https://js.clerk.dev/v5.3.0/clerk.umd.min.js';
+        script.onload = function() {
+            log('Clerk script loaded');
+            try {
+                window.Clerk.load({
+                    publishableKey: 'pk_test_Y3VkZGVkLWRlbnQtNzMuY2xlcmsuYWNjb3VudHMuZGV2JA'
+                }).then(clerk => {
+                    log('Clerk initialized successfully');
+                    document.getElementById('clerk-container').innerHTML = 
+                        '<div id="sign-in"></div>';
+                    clerk.mountSignIn(document.getElementById('sign-in'));
+                }).catch(error => {
+                    log('Clerk initialization failed: ' + error.message);
+                });
+            } catch (error) {
+                log('Error loading Clerk: ' + error.message);
+            }
+        };
+        script.onerror = function() {
+            log('Failed to load Clerk script from CDN');
+        };
+        document.head.appendChild(script);
+    </script>
+</body>
+</html>

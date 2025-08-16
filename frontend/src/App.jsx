@@ -113,10 +113,25 @@ function HomePage() {
 }
 
 function SignInPage() {
-  const { isLoaded } = useAuth()
+  const { isLoaded, isSignedIn } = useAuth()
+  const clerk = useClerk()
   const [showTimeout, setShowTimeout] = React.useState(false)
+  const [debugInfo, setDebugInfo] = React.useState({})
   
-  console.log('SignInPage rendering, Clerk isLoaded:', isLoaded)
+  console.log('SignInPage rendering, Clerk isLoaded:', isLoaded, 'isSignedIn:', isSignedIn)
+  console.log('Clerk instance:', clerk)
+  
+  // Collect debug info
+  React.useEffect(() => {
+    setDebugInfo({
+      clerkExists: !!clerk,
+      isLoaded,
+      isSignedIn,
+      publishableKey: import.meta.env.VITE_CLERK_PUBLISHABLE_KEY?.substring(0, 20) + '...',
+      userAgent: navigator.userAgent,
+      url: window.location.href
+    })
+  }, [clerk, isLoaded, isSignedIn])
   
   // Show timeout message if Clerk doesn't load within 10 seconds
   React.useEffect(() => {
@@ -221,10 +236,13 @@ function SignInPage() {
         )}
         
         {/* Debug info */}
-        <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#fef3c7', borderRadius: '4px' }}>
-          <p style={{ fontSize: '0.75rem', color: '#92400e' }}>
-            Debug - Clerk loaded: {isLoaded ? 'Yes' : 'No'} | Key: {import.meta.env.VITE_CLERK_PUBLISHABLE_KEY ? 'Found' : 'Missing'}
+        <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#fef3c7', borderRadius: '4px' }}>
+          <p style={{ fontSize: '0.75rem', color: '#92400e', fontWeight: '600', marginBottom: '8px' }}>
+            Debug Information:
           </p>
+          <pre style={{ fontSize: '0.6rem', color: '#92400e', margin: 0, whiteSpace: 'pre-wrap' }}>
+            {JSON.stringify(debugInfo, null, 2)}
+          </pre>
         </div>
       </div>
     </div>
