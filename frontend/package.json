@@ -16,6 +16,8 @@
   "dependencies": {
     "@clerk/clerk-react": "^5.42.0",
     "@headlessui/react": "^1.7.17",
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.16",
     "axios": "^1.6.2",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
