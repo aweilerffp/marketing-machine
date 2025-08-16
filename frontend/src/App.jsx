@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Routes, Route, Link, Navigate } from 'react-router-dom'
-import { useAuth, SignedIn, SignedOut, SignInButton, UserButton, SignIn, SignUp } from '@clerk/clerk-react'
+import { useAuth, SignedIn, SignedOut, SignInButton, UserButton, SignIn, SignUp, useClerk } from '@clerk/clerk-react'
 
 // Layout Component with Clerk Integration
 function Layout({ children }) {
