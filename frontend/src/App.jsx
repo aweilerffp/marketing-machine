@@ -114,25 +114,50 @@ function HomePage() {
 
 function SignInPage() {
   return (
-    <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', backgroundColor: '#f9fafb' }}>
+      <div style={{ width: '100%', maxWidth: '400px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <h2 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#111827', marginBottom: '8px' }}>
             Sign in to your account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p style={{ color: '#6b7280', fontSize: '0.875rem' }}>
             Or{' '}
-            <Link to="/sign-up" className="font-medium text-blue-600 hover:text-blue-500">
+            <Link 
+              to="/sign-up" 
+              style={{ color: '#2563eb', textDecoration: 'none', fontWeight: '500' }}
+            >
               create a new account
             </Link>
           </p>
         </div>
-        <SignIn 
-          routing="path" 
-          path="/sign-in"
-          afterSignInUrl="/dashboard"
-          signUpUrl="/sign-up"
-        />
+        
+        {/* Debug container for Clerk */}
+        <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+          <SignIn 
+            routing="path" 
+            path="/sign-in"
+            afterSignInUrl="/dashboard"
+            signUpUrl="/sign-up"
+            appearance={{
+              elements: {
+                rootBox: {
+                  width: '100%'
+                },
+                card: {
+                  backgroundColor: 'white',
+                  boxShadow: 'none'
+                }
+              }
+            }}
+          />
+          
+          {/* Fallback content */}
+          <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#fef3c7', borderRadius: '4px' }}>
+            <p style={{ fontSize: '0.75rem', color: '#92400e' }}>
+              Debug: Clerk SignIn component should appear above. If not visible, there may be a Clerk loading issue.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -140,25 +165,50 @@ function SignInPage() {
 
 function SignUpPage() {
   return (
-    <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', backgroundColor: '#f9fafb' }}>
+      <div style={{ width: '100%', maxWidth: '400px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <h2 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#111827', marginBottom: '8px' }}>
             Create your account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p style={{ color: '#6b7280', fontSize: '0.875rem' }}>
             Or{' '}
-            <Link to="/sign-in" className="font-medium text-blue-600 hover:text-blue-500">
+            <Link 
+              to="/sign-in" 
+              style={{ color: '#2563eb', textDecoration: 'none', fontWeight: '500' }}
+            >
               sign in to existing account
             </Link>
           </p>
         </div>
-        <SignUp 
-          routing="path" 
-          path="/sign-up"
-          afterSignUpUrl="/dashboard"
-          signInUrl="/sign-in"
-        />
+        
+        {/* Debug container for Clerk */}
+        <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+          <SignUp 
+            routing="path" 
+            path="/sign-up"
+            afterSignUpUrl="/dashboard"
+            signInUrl="/sign-in"
+            appearance={{
+              elements: {
+                rootBox: {
+                  width: '100%'
+                },
+                card: {
+                  backgroundColor: 'white',
+                  boxShadow: 'none'
+                }
+              }
+            }}
+          />
+          
+          {/* Fallback content */}
+          <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#fef3c7', borderRadius: '4px' }}>
+            <p style={{ fontSize: '0.75rem', color: '#92400e' }}>
+              Debug: Clerk SignUp component should appear above. If not visible, there may be a Clerk loading issue.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   )
