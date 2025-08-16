@@ -153,9 +153,35 @@ function SignInPage() {
           
           {/* Fallback content */}
           <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#fef3c7', borderRadius: '4px' }}>
-            <p style={{ fontSize: '0.75rem', color: '#92400e' }}>
+            <p style={{ fontSize: '0.75rem', color: '#92400e', marginBottom: '10px' }}>
               Debug: Clerk SignIn component should appear above. If not visible, there may be a Clerk loading issue.
             </p>
+            <p style={{ fontSize: '0.75rem', color: '#92400e' }}>
+              Clerk Key: {import.meta.env.VITE_CLERK_PUBLISHABLE_KEY ? 'Found' : 'Missing'}
+            </p>
+          </div>
+          
+          {/* Temporary fallback form */}
+          <div style={{ marginTop: '20px', padding: '20px', backgroundColor: '#f3f4f6', borderRadius: '6px' }}>
+            <p style={{ fontSize: '0.875rem', fontWeight: '500', marginBottom: '16px', color: '#374151' }}>
+              Fallback Authentication (Demo)
+            </p>
+            <button 
+              onClick={() => window.location.href = '/dashboard'}
+              style={{
+                width: '100%',
+                backgroundColor: '#2563eb',
+                color: 'white',
+                padding: '12px',
+                borderRadius: '6px',
+                border: 'none',
+                fontSize: '1rem',
+                fontWeight: '500',
+                cursor: 'pointer'
+              }}
+            >
+              Continue as Demo User
+            </button>
           </div>
         </div>
       </div>
