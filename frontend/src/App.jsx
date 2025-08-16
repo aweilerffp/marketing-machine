@@ -1,16 +1,10 @@
 import React, { useState } from 'react'
-import { Routes, Route, Link, useNavigate } from 'react-router-dom'
+import { Routes, Route, Link, Navigate } from 'react-router-dom'
+import { useAuth, SignedIn, SignedOut, SignInButton, UserButton, SignIn, SignUp } from '@clerk/clerk-react'
 
-// Simple auth context
-const AuthContext = React.createContext()
-
-function useAuth() {
-  return React.useContext(AuthContext)
-}
-
-// Simple Layout
+// Layout Component with Clerk Integration
 function Layout({ children }) {
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
   
   return (
     <div className="min-h-screen bg-gray-50">
@@ -23,26 +17,27 @@ function Layout({ children }) {
               </Link>
             </div>
             <div className="flex items-center space-x-4">
-              {user ? (
-                <>
-                  <Link to="/dashboard" className="text-gray-700 hover:text-gray-900">Dashboard</Link>
-                  <Link to="/content" className="text-gray-700 hover:text-gray-900">Content</Link>
-                  <Link to="/analytics" className="text-gray-700 hover:text-gray-900">Analytics</Link>
-                  <button 
-                    onClick={logout}
-                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm"
-                  >
-                    Sign Out
-                  </button>
-                </>
-              ) : (
+              <SignedIn>
+                <Link to="/dashboard" className="text-gray-700 hover:text-gray-900">Dashboard</Link>
+                <Link to="/content" className="text-gray-700 hover:text-gray-900">Content</Link>
+                <Link to="/analytics" className="text-gray-700 hover:text-gray-900">Analytics</Link>
+                <Link to="/profile" className="text-gray-700 hover:text-gray-900">Profile</Link>
+                <UserButton 
+                  appearance={{
+                    elements: {
+                      avatarBox: "w-8 h-8"
+                    }
+                  }}
+                />
+              </SignedIn>
+              <SignedOut>
                 <Link 
-                  to="/login"
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm"
+                  to="/sign-in"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
                 >
                   Sign In
                 </Link>
-              )}
+              </SignedOut>
             </div>
           </div>
         </div>
@@ -56,16 +51,27 @@ function Layout({ children }) {
 
 // Pages
 function HomePage() {
-  const { user } = useAuth()
-  
   return (
     <div className="text-center py-12">
       <h1 className="text-4xl font-bold text-gray-900 mb-4">Marketing Machine</h1>
       <p className="text-xl text-gray-600 mb-8">Transform your meeting recordings into engaging LinkedIn content</p>
       
-      {user ? (
+      <SignedOut>
         <div className="space-y-4">
-          <p className="text-green-600 font-medium">Welcome back, {user.email}!</p>
+          <SignInButton mode="modal">
+            <button className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-md text-lg font-medium">
+              Get Started Now
+            </button>
+          </SignInButton>
+          <p className="text-sm text-gray-500">
+            Professional AI-powered content creation
+          </p>
+        </div>
+      </SignedOut>
+      
+      <SignedIn>
+        <div className="space-y-4">
+          <p className="text-green-600 font-medium">Welcome back! Ready to create amazing content?</p>
           <Link 
             to="/dashboard" 
             className="inline-block bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-md text-lg font-medium"
@@ -73,72 +79,114 @@ function HomePage() {
             Go to Dashboard
           </Link>
         </div>
-      ) : (
-        <div className="space-y-4">
-          <Link 
-            to="/login"
-            className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-md text-lg font-medium"
-          >
-            Sign In to Get Started
-          </Link>
-          <p className="text-sm text-gray-500">Demo mode - Use any email/password to sign in</p>
-        </div>
-      )}
+      </SignedIn>
     </div>
   )
 }
 
-function LoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const { login } = useAuth()
-  const navigate = useNavigate()
-  
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (email && password) {
-      login({ email })
-      navigate('/dashboard')
-    }
-  }
+function SignInPage() {
+  return (
+    <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md space-y-8">
+        <div>
+          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+            Sign in to your account
+          </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Or{' '}
+            <Link to="/sign-up" className="font-medium text-blue-600 hover:text-blue-500">
+              create a new account
+            </Link>
+          </p>
+        </div>
+        <SignIn 
+          routing="path" 
+          path="/sign-in"
+          afterSignInUrl="/dashboard"
+          signUpUrl="/sign-up"
+        />
+      </div>
+    </div>
+  )
+}
+
+function SignUpPage() {
+  return (
+    <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md space-y-8">
+        <div>
+          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
+            Create your account
+          </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Or{' '}
+            <Link to="/sign-in" className="font-medium text-blue-600 hover:text-blue-500">
+              sign in to existing account
+            </Link>
+          </p>
+        </div>
+        <SignUp 
+          routing="path" 
+          path="/sign-up"
+          afterSignUpUrl="/dashboard"
+          signInUrl="/sign-in"
+        />
+      </div>
+    </div>
+  )
+}
+
+function ProfilePage() {
+  const { user } = useAuth()
   
   return (
-    <div className="max-w-md mx-auto mt-8">
-      <div className="bg-white p-8 rounded-lg shadow">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Sign In</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div>
+      <h1 className="text-3xl font-bold text-gray-900 mb-6">Profile</h1>
+      <div className="bg-white rounded-lg shadow p-6">
+        <div className="flex items-center space-x-6">
+          <img 
+            className="h-24 w-24 rounded-full"
+            src={user?.imageUrl}
+            alt={user?.fullName}
+          />
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input 
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="you@example.com"
-              required
-            />
+            <h2 className="text-2xl font-bold text-gray-900">{user?.fullName}</h2>
+            <p className="text-gray-600">{user?.primaryEmailAddress?.emailAddress}</p>
+            <p className="text-sm text-gray-500">
+              Member since {new Date(user?.createdAt).toLocaleDateString()}
+            </p>
           </div>
+        </div>
+        
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <input 
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="••••••••"
-              required
-            />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Account Information</h3>
+            <dl className="space-y-2">
+              <div>
+                <dt className="text-sm font-medium text-gray-500">Email</dt>
+                <dd className="text-sm text-gray-900">{user?.primaryEmailAddress?.emailAddress}</dd>
+              </div>
+              <div>
+                <dt className="text-sm font-medium text-gray-500">User ID</dt>
+                <dd className="text-sm text-gray-900 font-mono">{user?.id}</dd>
+              </div>
+            </dl>
           </div>
-          <button 
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md font-medium"
-          >
-            Sign In
-          </button>
-        </form>
-        <p className="mt-4 text-sm text-gray-600 text-center">
-          Demo: Enter any email and password to sign in
-        </p>
+          
+          <div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Usage Statistics</h3>
+            <dl className="space-y-2">
+              <div>
+                <dt className="text-sm font-medium text-gray-500">Posts Created</dt>
+                <dd className="text-sm text-gray-900">24</dd>
+              </div>
+              <div>
+                <dt className="text-sm font-medium text-gray-500">Total Engagement</dt>
+                <dd className="text-sm text-gray-900">3,847 interactions</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -159,7 +207,7 @@ function DashboardPage() {
         </Link>
       </div>
       
-      <p className="text-gray-600 mb-6">Welcome back, {user?.email}!</p>
+      <p className="text-gray-600 mb-6">Welcome back, {user?.firstName}!</p>
       
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -464,64 +512,91 @@ function AnalyticsPage() {
   )
 }
 
-// Protected Route
+// Protected Route Component
 function ProtectedRoute({ children }) {
-  const { user } = useAuth()
-  const navigate = useNavigate()
-  
-  React.useEffect(() => {
-    if (!user) {
-      navigate('/login')
-    }
-  }, [user, navigate])
-  
-  return user ? children : null
+  const { isLoaded, isSignedIn } = useAuth()
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!isSignedIn) {
+    return <Navigate to="/sign-in" replace />
+  }
+
+  return children
 }
 
-// Main App
+// Main App Component
 function App() {
-  const [user, setUser] = useState(null)
-  
-  const login = (userData) => {
-    setUser(userData)
-  }
-  
-  const logout = () => {
-    setUser(null)
-  }
-  
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      <div className="min-h-screen bg-gray-50">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/dashboard" element={
+    <div className="min-h-screen bg-gray-50">
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/sign-in" element={<SignInPage />} />
+        <Route path="/sign-up" element={<SignUpPage />} />
+
+        {/* Protected Routes */}
+        <Route 
+          path="/dashboard" 
+          element={
             <ProtectedRoute>
-              <Layout><DashboardPage /></Layout>
+              <Layout>
+                <DashboardPage />
+              </Layout>
             </ProtectedRoute>
-          } />
-          <Route path="/content" element={
+          } 
+        />
+        <Route 
+          path="/content" 
+          element={
             <ProtectedRoute>
-              <Layout><ContentPage /></Layout>
+              <Layout>
+                <ContentPage />
+              </Layout>
             </ProtectedRoute>
-          } />
-          <Route path="/analytics" element={
+          } 
+        />
+        <Route 
+          path="/analytics" 
+          element={
             <ProtectedRoute>
-              <Layout><AnalyticsPage /></Layout>
+              <Layout>
+                <AnalyticsPage />
+              </Layout>
             </ProtectedRoute>
-          } />
-          <Route path="*" element={
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-              <div className="text-center">
-                <h1 className="text-4xl font-bold text-gray-900 mb-4">404 - Page Not Found</h1>
-                <Link to="/" className="text-blue-600 hover:text-blue-800">← Back to Home</Link>
-              </div>
+          } 
+        />
+        <Route 
+          path="/profile" 
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <ProfilePage />
+              </Layout>
+            </ProtectedRoute>
+          } 
+        />
+
+        {/* 404 Route */}
+        <Route path="*" element={
+          <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="text-center">
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">404 - Page Not Found</h1>
+              <Link to="/" className="text-blue-600 hover:text-blue-800">← Back to Home</Link>
             </div>
-          } />
-        </Routes>
-      </div>
-    </AuthContext.Provider>
+          </div>
+        } />
+      </Routes>
+    </div>
   )
 }
 

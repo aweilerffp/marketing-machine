@@ -1,11 +1,20 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
+import { ClerkProvider } from '@clerk/clerk-react'
 import App from './App.jsx'
 import './styles/index.css'
 
-// Add immediate visual feedback
-console.log('Marketing Machine - Starting...')
+console.log('Marketing Machine - Starting with Clerk Authentication...')
+
+// Import Clerk Publishable Key
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+
+if (!PUBLISHABLE_KEY) {
+  throw new Error('Missing Clerk Publishable Key. Add VITE_CLERK_PUBLISHABLE_KEY to your environment variables.')
+}
+
+console.log('Clerk configuration loaded successfully')
 
 const root = document.getElementById('root')
 
@@ -13,17 +22,25 @@ if (!root) {
   document.body.innerHTML = '<div style="padding: 20px; text-align: center;"><h1>Error: No root element found</h1></div>'
 } else {
   // Show loading state immediately
-  root.innerHTML = '<div style="padding: 40px; text-align: center; font-family: sans-serif;"><h1>Marketing Machine</h1><p>Loading application...</p></div>'
+  root.innerHTML = '<div style="padding: 40px; text-align: center; font-family: sans-serif;"><h1>Marketing Machine</h1><p>Loading authentication...</p></div>'
   
   try {
     ReactDOM.createRoot(root).render(
       <React.StrictMode>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <ClerkProvider 
+          publishableKey={PUBLISHABLE_KEY}
+          afterSignInUrl="/dashboard"
+          afterSignUpUrl="/dashboard"
+          signInUrl="/sign-in"
+          signUpUrl="/sign-up"
+        >
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ClerkProvider>
       </React.StrictMode>
     )
-    console.log('App rendered successfully!')
+    console.log('App with Clerk authentication rendered successfully!')
   } catch (error) {
     console.error('Error rendering app:', error)
     root.innerHTML = `
