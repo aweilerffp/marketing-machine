@@ -114,8 +114,21 @@ function HomePage() {
 
 function SignInPage() {
   const { isLoaded } = useAuth()
+  const [showTimeout, setShowTimeout] = React.useState(false)
   
   console.log('SignInPage rendering, Clerk isLoaded:', isLoaded)
+  
+  // Show timeout message if Clerk doesn't load within 10 seconds
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!isLoaded) {
+        setShowTimeout(true)
+        console.error('Clerk failed to load within 10 seconds')
+      }
+    }, 10000)
+    
+    return () => clearTimeout(timer)
+  }, [isLoaded])
   
   return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', backgroundColor: '#f9fafb' }}>
@@ -136,10 +149,53 @@ function SignInPage() {
         </div>
         
         {/* Show loading state */}
-        {!isLoaded && (
+        {!isLoaded && !showTimeout && (
           <div style={{ textAlign: 'center', padding: '40px' }}>
             <div style={{ display: 'inline-block', width: '32px', height: '32px', border: '3px solid #f3f3f3', borderTop: '3px solid #2563eb', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
             <p style={{ marginTop: '16px', color: '#6b7280' }}>Loading Clerk...</p>
+          </div>
+        )}
+        
+        {/* Show timeout message */}
+        {!isLoaded && showTimeout && (
+          <div style={{ backgroundColor: '#fef2f2', padding: '20px', borderRadius: '8px', border: '1px solid #fecaca' }}>
+            <h3 style={{ color: '#dc2626', fontSize: '1.125rem', fontWeight: '600', marginBottom: '8px' }}>
+              Authentication Service Unavailable
+            </h3>
+            <p style={{ color: '#7f1d1d', fontSize: '0.875rem', marginBottom: '16px' }}>
+              Clerk authentication failed to load. This might be a network issue or service outage.
+            </p>
+            <button 
+              onClick={() => window.location.reload()}
+              style={{
+                backgroundColor: '#dc2626',
+                color: 'white',
+                padding: '8px 16px',
+                borderRadius: '4px',
+                border: 'none',
+                fontSize: '0.875rem',
+                fontWeight: '500',
+                cursor: 'pointer',
+                marginRight: '8px'
+              }}
+            >
+              Retry
+            </button>
+            <button 
+              onClick={() => window.location.href = '/dashboard'}
+              style={{
+                backgroundColor: '#6b7280',
+                color: 'white',
+                padding: '8px 16px',
+                borderRadius: '4px',
+                border: 'none',
+                fontSize: '0.875rem',
+                fontWeight: '500',
+                cursor: 'pointer'
+              }}
+            >
+              Continue as Demo
+            </button>
           </div>
         )}
         
