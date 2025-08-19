@@ -43,7 +43,7 @@ if (!root) {
   document.body.innerHTML = '<div style="padding: 20px; text-align: center;"><h1>Error: No root element found</h1></div>'
 } else {
   // Show loading state immediately
-  root.innerHTML = '<div style="padding: 40px; text-align: center; font-family: sans-serif;"><h1>Marketing Machine</h1><p>Loading authentication...</p></div>'
+  root.innerHTML = '<div style="padding: 40px; text-align: center; font-family: sans-serif;"><h1>🔄 Marketing Machine</h1><p>⚡ Initializing React App...</p><p style="font-size: 12px; color: #666;">If you see this message, the app is starting up.</p></div>'
   
   try {
     console.log('Attempting to render React app...');
