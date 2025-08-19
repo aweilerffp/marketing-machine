@@ -49,14 +49,29 @@ if (!root) {
   try {
     console.log('Attempting to render React app...');
     
-    // Try to render simple app first to isolate issues
-    ReactDOM.createRoot(root).render(
-      <React.StrictMode>
-        <ErrorBoundary>
-          <SimpleApp />
-        </ErrorBoundary>
-      </React.StrictMode>
-    )
+    // Try to render with Clerk first, fallback to SimpleApp on error
+    try {
+      ReactDOM.createRoot(root).render(
+        <React.StrictMode>
+          <ErrorBoundary>
+            <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
+            </ClerkProvider>
+          </ErrorBoundary>
+        </React.StrictMode>
+      )
+    } catch (clerkError) {
+      console.error('Clerk initialization failed, using SimpleApp fallback:', clerkError);
+      ReactDOM.createRoot(root).render(
+        <React.StrictMode>
+          <ErrorBoundary>
+            <SimpleApp />
+          </ErrorBoundary>
+        </React.StrictMode>
+      )
+    }
     
     console.log('React app render completed');
   } catch (error) {
