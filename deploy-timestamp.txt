@@ -1,3 +1,5 @@
-Marketing Machine deployment timestamp: 2025-08-19T20:45:00Z
+Marketing Machine deployment timestamp: 2025-08-19T21:00:00Z
 This file forces a fresh deployment to avoid caching issues.
-Build version: React-Auth-Enabled-v2
+Build version: Ultra-Fast-HTML-v1.0
+DEPLOYMENT: HTML/CSS/JS (No React bundles)
+PERFORMANCE: Instant loading, no timeouts
