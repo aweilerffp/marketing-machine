@@ -6,17 +6,25 @@ import App from './App.jsx'
 import './styles/index.css'
 
 
-// Import Clerk Publishable Key
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+// Import Clerk Publishable Key with fallback
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || 'pk_test_Y3VkZGx5LXNoZWVwLTAuY2xlcmsuYWNjb3VudHMuZGV2JA'
 
+console.log('Clerk Key:', PUBLISHABLE_KEY ? '✅ Found' : '❌ Missing');
 
 if (!PUBLISHABLE_KEY) {
-  throw new Error('Missing Clerk Publishable Key. Add VITE_CLERK_PUBLISHABLE_KEY to your environment variables.')
+  console.error('Missing Clerk Publishable Key');
+  document.getElementById('root').innerHTML = `
+    <div style="padding: 40px; text-align: center; font-family: sans-serif;">
+      <h1>Configuration Error</h1>
+      <p>Missing Clerk authentication key. Please check environment variables.</p>
+      <p>Expected: VITE_CLERK_PUBLISHABLE_KEY</p>
+    </div>
+  `;
 }
 
 // Validate key format
-if (!PUBLISHABLE_KEY.startsWith('pk_')) {
-  throw new Error('Invalid Clerk Publishable Key format. Must start with pk_')
+if (PUBLISHABLE_KEY && !PUBLISHABLE_KEY.startsWith('pk_')) {
+  console.error('Invalid Clerk key format');
 }
 
 

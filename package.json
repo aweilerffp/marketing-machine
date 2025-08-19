@@ -19,7 +19,8 @@
     "lint:frontend": "cd frontend && npm run lint",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
-    "deploy": "echo 'Deployment will be configured for Hetzner VPS'"
+    "deploy-test": "node deploy-test.js",
+    "deploy": "npm run deploy-test && git add -A && git commit -m 'deploy: Automated deployment with testing' && git push origin master"
   },
   "keywords": [
     "marketing",
