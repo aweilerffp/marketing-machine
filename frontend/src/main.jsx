@@ -10,12 +10,15 @@ import './styles/index.css'
 // Import Clerk Publishable Key with hardcoded fallback for production
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || 'pk_test_Y3VkZGx5LXNoZWVwLTAuY2xlcmsuYWNjb3VudHMuZGV2JA'
 
+console.log('=== MARKETING MACHINE DEBUG INFO ===');
 console.log('Environment variables check:');
 console.log('- NODE_ENV:', import.meta.env.NODE_ENV);
 console.log('- MODE:', import.meta.env.MODE);
 console.log('- VITE_CLERK_PUBLISHABLE_KEY present:', !!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
 console.log('- Final PUBLISHABLE_KEY:', PUBLISHABLE_KEY ? 'Found' : 'Missing');
-console.log('- All env vars:', import.meta.env);
+console.log('- Window location:', window.location.href);
+console.log('- Document ready state:', document.readyState);
+console.log('=====================================');
 
 if (!PUBLISHABLE_KEY) {
   console.error('Missing Clerk Publishable Key');
@@ -43,6 +46,9 @@ if (!root) {
   root.innerHTML = '<div style="padding: 40px; text-align: center; font-family: sans-serif;"><h1>Marketing Machine</h1><p>Loading authentication...</p></div>'
   
   try {
+    console.log('Attempting to render React app...');
+    
+    // Try to render with Clerk first
     ReactDOM.createRoot(root).render(
       <React.StrictMode>
         <ErrorBoundary>
@@ -54,7 +60,10 @@ if (!root) {
         </ErrorBoundary>
       </React.StrictMode>
     )
+    
+    console.log('React app render completed');
   } catch (error) {
+    console.error('React render failed, trying fallback:', error);
     root.innerHTML = `
       <div style="padding: 40px; text-align: center; font-family: sans-serif;">
         <h1>Marketing Machine</h1>

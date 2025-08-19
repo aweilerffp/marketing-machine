@@ -54,15 +54,53 @@ function Layout({ children }) {
 
 // Test HomePage with forced visible content
 function HomePage() {
+  console.log('HomePage component rendering...');
+  
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', padding: '20px' }}>
+    <div style={{ 
+      minHeight: '100vh', 
+      backgroundColor: '#f9fafb', 
+      padding: '20px',
+      position: 'relative',
+      zIndex: 1
+    }}>
       <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-        <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#111827', marginBottom: '16px' }}>
-          Marketing Machine
+        <h1 style={{ 
+          fontSize: '2.5rem', 
+          fontWeight: 'bold', 
+          color: '#111827', 
+          marginBottom: '16px',
+          textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
+        }}>
+          🚀 Marketing Machine
         </h1>
-        <p style={{ fontSize: '1.25rem', color: '#6b7280', marginBottom: '32px' }}>
+        <p style={{ 
+          fontSize: '1.25rem', 
+          color: '#6b7280', 
+          marginBottom: '32px',
+          fontWeight: '500'
+        }}>
           Transform your meeting recordings into engaging LinkedIn content
         </p>
+        
+        <div style={{ 
+          backgroundColor: '#ffffff', 
+          padding: '24px', 
+          borderRadius: '8px', 
+          marginBottom: '32px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        }}>
+          <h2 style={{ 
+            fontSize: '1.5rem', 
+            color: '#111827', 
+            marginBottom: '16px' 
+          }}>
+            ✅ Production Status: ACTIVE
+          </h2>
+          <p style={{ color: '#059669', fontWeight: '500' }}>
+            Application is loading successfully
+          </p>
+        </div>
         
         {/* Always show buttons for debugging */}
         <div style={{ marginBottom: '20px' }}>
