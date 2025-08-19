@@ -1,8 +1,16 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": "frontend/dist",
+  "outputDirectory": "frontend/dist", 
   "installCommand": "npm install",
   "rewrites": [
+    {
+      "source": "/debug.html",
+      "destination": "/debug.html"
+    },
+    {
+      "source": "/test.html",
+      "destination": "/test.html"
+    },
     {
       "source": "/(.*)",
       "destination": "/index.html"
