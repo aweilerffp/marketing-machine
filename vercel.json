@@ -1,16 +1,8 @@
 {
-  "buildCommand": "cd frontend && npm install && npm run build",
-  "outputDirectory": "frontend/dist", 
-  "installCommand": "npm install --prefix frontend",
+  "buildCommand": "cp frontend/index.html .",
+  "outputDirectory": ".", 
+  "installCommand": "echo 'No install needed for static HTML'",
   "rewrites": [
-    {
-      "source": "/debug.html",
-      "destination": "/debug.html"
-    },
-    {
-      "source": "/test.html",
-      "destination": "/test.html"
-    },
     {
       "source": "/(.*)",
       "destination": "/index.html"
