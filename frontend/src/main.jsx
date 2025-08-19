@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { ClerkProvider } from '@clerk/clerk-react'
 import App from './App.jsx'
+import SimpleApp from './SimpleApp.jsx'
 import ErrorBoundary from './components/ErrorBoundary.jsx'
 import './styles/index.css'
 
@@ -48,15 +49,11 @@ if (!root) {
   try {
     console.log('Attempting to render React app...');
     
-    // Try to render with Clerk first
+    // Try to render simple app first to isolate issues
     ReactDOM.createRoot(root).render(
       <React.StrictMode>
         <ErrorBoundary>
-          <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
-          </ClerkProvider>
+          <SimpleApp />
         </ErrorBoundary>
       </React.StrictMode>
     )
