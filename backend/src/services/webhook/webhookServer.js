@@ -70,10 +70,19 @@ function startWebhookServer(port = 3002) {
       const result = await storeWebhookContent(processedContent);
 
       // Trigger Marketing Machine processing
-      await addContentJob('generate-hooks', {
-        contentSourceId: result.contentSourceId,
-        companyId: processedContent.companyId
-      });
+      try {
+        await addContentJob('generate-hooks', {
+          contentSourceId: result.contentSourceId,
+          companyId: processedContent.companyId
+        });
+        logger.info('Content job queued successfully');
+      } catch (queueError) {
+        logger.warn('Failed to queue content job, but webhook data was stored', {
+          error: queueError.message,
+          contentSourceId: result.contentSourceId
+        });
+        // Don't fail the webhook if queue fails
+      }
 
       logger.info('Webhook processed successfully', {
         source,

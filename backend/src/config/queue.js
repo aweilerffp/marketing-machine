@@ -126,7 +126,25 @@ function setupQueueEventHandlers() {
  */
 function setupJobProcessors() {
   try {
-    // Import job processors
+    // Import content processors
+    const {
+      processHookGeneration,
+      processPostGeneration,
+      processBatchContent
+    } = require('../services/content/queueProcessors');
+
+    // Content Processing Jobs
+    contentProcessingQueue.process('generate-hooks', 2, processHookGeneration);
+    contentProcessingQueue.process('generate-posts', 3, processPostGeneration);
+    contentProcessingQueue.process('batch-content', 1, processBatchContent);
+    
+    // Image Generation Jobs
+    const { processImageGeneration } = require('../services/ai/imageQueueProcessor');
+    imageGenerationQueue.process('generate-image', 2, processImageGeneration);
+
+    logger.info('Content queue processors set up successfully');
+
+    // Import publishing processors
     const {
       processLinkedInPublishing,
       processAnalyticsCollection,

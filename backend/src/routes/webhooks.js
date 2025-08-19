@@ -24,23 +24,48 @@ router.get('/configs', async (req, res) => {
 
     const result = await query(`
       SELECT 
-        id,
-        uuid,
-        name,
-        webhook_url,
-        source_type,
-        status,
-        last_received_at,
-        total_received,
-        created_at,
-        updated_at
-      FROM webhook_configs 
-      WHERE company_id = $1
-      ORDER BY created_at DESC
+        wc.id,
+        wc.uuid,
+        wc.name,
+        wc.webhook_url,
+        wc.source_type,
+        wc.status,
+        wc.last_received_at,
+        wc.total_received,
+        wc.created_at,
+        wc.updated_at,
+        wc.secret_key,
+        wc.filters,
+        wc.payload_mapping,
+        COUNT(DISTINCT cs.id) as transcripts_processed,
+        COUNT(DISTINCT mh.id) as hooks_generated,
+        MAX(cs.created_at) as last_transcript_at
+      FROM webhook_configs wc
+      LEFT JOIN content_sources cs ON cs.source_name = wc.source_type 
+        AND cs.company_id = wc.company_id
+      LEFT JOIN marketing_hooks mh ON mh.content_source_id = cs.id
+      WHERE wc.company_id = $1
+      GROUP BY wc.id
+      ORDER BY wc.created_at DESC
     `, [companyId]);
 
+    // Add statistics and setup instructions for each webhook
+    const webhooksWithStats = result.rows.map(webhook => ({
+      ...webhook,
+      statistics: {
+        total_received: parseInt(webhook.total_received || 0),
+        transcripts_processed: parseInt(webhook.transcripts_processed || 0),
+        hooks_generated: parseInt(webhook.hooks_generated || 0),
+        last_received: webhook.last_transcript_at || webhook.last_received_at,
+        success_rate: webhook.total_received > 0 
+          ? ((webhook.transcripts_processed / webhook.total_received) * 100).toFixed(1)
+          : 0
+      },
+      setup_instructions: getWebhookInstructions(webhook.source_type, webhook.webhook_url, webhook.secret_key)
+    }));
+
     res.json({
-      webhooks: result.rows,
+      webhooks: webhooksWithStats,
       total: result.rows.length
     });
 
@@ -76,8 +101,9 @@ router.post('/configs', [
       description = ''
     } = req.body;
 
-    // Generate webhook URL
-    const webhookUrl = `${process.env.WEBHOOK_URL || 'http://localhost:3002'}/webhook/${source_type === 'custom' ? 'meeting-recorder' : source_type.replace('.', '-')}`;
+    // Generate unique webhook URL with ID
+    const webhookId = require('crypto').randomBytes(8).toString('hex');
+    const webhookUrl = `${process.env.WEBHOOK_URL || 'http://localhost:3002'}/webhook/${source_type === 'custom' ? 'meeting-recorder' : source_type.replace('.', '-')}/${webhookId}`;
 
     // Generate secret key for signature verification
     const secretKey = require('crypto').randomBytes(32).toString('hex');

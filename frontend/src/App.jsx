@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { Routes, Route, Link, Navigate } from 'react-router-dom'
 import { useAuth, SignedIn, SignedOut, SignInButton, UserButton, SignIn, SignUp, useClerk } from '@clerk/clerk-react'
+import WebhookSetup from './pages/WebhookSetup'
+import WebhookDashboard from './components/WebhookDashboard'
 
 // Layout Component with Clerk Integration
 function Layout({ children }) {
@@ -19,6 +21,7 @@ function Layout({ children }) {
             <div className="flex items-center space-x-4">
               <SignedIn>
                 <Link to="/dashboard" className="text-gray-700 hover:text-gray-900">Dashboard</Link>
+                <Link to="/webhooks" className="text-gray-700 hover:text-gray-900">Webhooks</Link>
                 <Link to="/content" className="text-gray-700 hover:text-gray-900">Content</Link>
                 <Link to="/analytics" className="text-gray-700 hover:text-gray-900">Analytics</Link>
                 <Link to="/profile" className="text-gray-700 hover:text-gray-900">Profile</Link>
@@ -392,6 +395,11 @@ function DashboardPage() {
         </div>
       </div>
       
+      {/* Webhook Dashboard */}
+      <div className="mb-8">
+        <WebhookDashboard />
+      </div>
+      
       {/* Recent Content */}
       <div className="bg-white rounded-lg shadow">
         <div className="px-6 py-4 border-b">
@@ -683,6 +691,16 @@ function App() {
           <ProtectedRoute>
             <Layout>
               <ContentPage />
+            </Layout>
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/webhooks" 
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <WebhookSetup />
             </Layout>
           </ProtectedRoute>
         } 
