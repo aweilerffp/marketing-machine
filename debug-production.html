@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Production</title>
+</head>
+<body>
+    <div id="debug">
+        <h1>Production Debug</h1>
+        <p>Testing environment variables...</p>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        // Check what environment variables are available in production
+        console.log('Environment check:');
+        console.log('VITE_CLERK_PUBLISHABLE_KEY:', import.meta.env.VITE_CLERK_PUBLISHABLE_KEY ? '✅ Found' : '❌ Missing');
+        console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
+        console.log('All env vars:', import.meta.env);
+        
+        document.getElementById('results').innerHTML = `
+            <p>Clerk Key: ${import.meta.env.VITE_CLERK_PUBLISHABLE_KEY ? '✅ Found' : '❌ Missing'}</p>
+            <p>API URL: ${import.meta.env.VITE_API_URL || 'Not set'}</p>
+            <p>Node ENV: ${import.meta.env.NODE_ENV}</p>
+            <p>Mode: ${import.meta.env.MODE}</p>
+        `;
+    </script>
+</body>
+</html>

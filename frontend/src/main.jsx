@@ -3,13 +3,19 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { ClerkProvider } from '@clerk/clerk-react'
 import App from './App.jsx'
+import ErrorBoundary from './components/ErrorBoundary.jsx'
 import './styles/index.css'
 
 
-// Import Clerk Publishable Key with fallback
+// Import Clerk Publishable Key with hardcoded fallback for production
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || 'pk_test_Y3VkZGx5LXNoZWVwLTAuY2xlcmsuYWNjb3VudHMuZGV2JA'
 
-console.log('Clerk Key:', PUBLISHABLE_KEY ? '✅ Found' : '❌ Missing');
+console.log('Environment variables check:');
+console.log('- NODE_ENV:', import.meta.env.NODE_ENV);
+console.log('- MODE:', import.meta.env.MODE);
+console.log('- VITE_CLERK_PUBLISHABLE_KEY present:', !!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
+console.log('- Final PUBLISHABLE_KEY:', PUBLISHABLE_KEY ? 'Found' : 'Missing');
+console.log('- All env vars:', import.meta.env);
 
 if (!PUBLISHABLE_KEY) {
   console.error('Missing Clerk Publishable Key');
@@ -39,11 +45,13 @@ if (!root) {
   try {
     ReactDOM.createRoot(root).render(
       <React.StrictMode>
-        <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </ClerkProvider>
+        <ErrorBoundary>
+          <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </ClerkProvider>
+        </ErrorBoundary>
       </React.StrictMode>
     )
   } catch (error) {
