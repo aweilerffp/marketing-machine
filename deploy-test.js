@@ -215,7 +215,13 @@ class DeploymentTester {
       await this.testEnvironmentFiles();
       await this.testDependencies();
       await this.testFrontendBuild();
-      await this.testBackendStartup();
+      
+      // Skip backend tests for frontend-only deployments
+      if (process.env.DEPLOY_TARGET !== 'frontend-only') {
+        await this.testBackendStartup();
+      } else {
+        this.log('Skipping backend tests for frontend-only deployment');
+      }
       // await this.testAPI(); // Skip for now as it requires services running
       
     } catch (error) {
