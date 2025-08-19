@@ -95,10 +95,10 @@ function HomePage() {
             color: '#111827', 
             marginBottom: '16px' 
           }}>
-            ✅ Production Status: ACTIVE
+            ✅ Full React App: READY
           </h2>
           <p style={{ color: '#059669', fontWeight: '500' }}>
-            Application is loading successfully
+            Authentication & onboarding enabled
           </p>
         </div>
         
