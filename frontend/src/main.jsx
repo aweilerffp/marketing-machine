@@ -48,18 +48,33 @@ if (!root) {
   try {
     console.log('Attempting to render React app...');
     
-    // Render full React app with authentication
-    ReactDOM.createRoot(root).render(
-      <React.StrictMode>
-        <ErrorBoundary>
-          <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+    // Try to render with Clerk, fallback to simplified version
+    try {
+      ReactDOM.createRoot(root).render(
+        <React.StrictMode>
+          <ErrorBoundary>
+            <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
+            </ClerkProvider>
+          </ErrorBoundary>
+        </React.StrictMode>
+      )
+      console.log('✅ Full Clerk app loaded successfully');
+    } catch (clerkError) {
+      console.warn('⚠️ Clerk failed, using simplified auth:', clerkError.message);
+      // Fallback to simplified version without Clerk
+      ReactDOM.createRoot(root).render(
+        <React.StrictMode>
+          <ErrorBoundary>
             <BrowserRouter>
-              <App />
+              <SimpleApp />
             </BrowserRouter>
-          </ClerkProvider>
-        </ErrorBoundary>
-      </React.StrictMode>
-    )
+          </ErrorBoundary>
+        </React.StrictMode>
+      )
+    }
     
     console.log('React app render completed');
   } catch (error) {
