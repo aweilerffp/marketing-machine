@@ -29,6 +29,42 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
       </style>
     </div>
+    
+    <script>
+      // Set a timeout to detect if React fails to load
+      setTimeout(() => {
+        const root = document.getElementById('root');
+        if (root && root.innerHTML.includes('Loading React application')) {
+          console.error('❌ React app failed to load within timeout');
+          root.innerHTML = `
+            <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: system-ui; background: #fef2f2; padding: 20px;">
+              <div style="background: white; padding: 40px; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); max-width: 600px; border-left: 4px solid #f59e0b;">
+                <h1 style="color: #d97706; margin-bottom: 20px; font-size: 1.5rem;">⏱️ React App Loading Timeout</h1>
+                <p style="color: #374151; margin-bottom: 16px;">The React application is taking longer than expected to load.</p>
+                <div style="margin-top: 24px; padding: 16px; background: #fffbeb; border-radius: 8px;">
+                  <h3 style="color: #92400e; margin: 0 0 8px 0;">Possible Issues:</h3>
+                  <ul style="color: #374151; margin: 0; padding-left: 20px;">
+                    <li>JavaScript bundle failed to download</li>
+                    <li>Network connectivity issues</li>
+                    <li>Clerk authentication service timeout</li>
+                    <li>Browser compatibility issues</li>
+                  </ul>
+                </div>
+                <div style="margin-top: 20px; display: flex; gap: 12px;">
+                  <button onclick="window.location.reload()" style="background: #3b82f6; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer;">
+                    Retry
+                  </button>
+                  <button onclick="console.log('Debug info:', {userAgent: navigator.userAgent, url: window.location.href, timestamp: new Date().toISOString()})" style="background: #6b7280; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer;">
+                    Debug Info
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      }, 10000); // 10 second timeout
+    </script>
+    
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

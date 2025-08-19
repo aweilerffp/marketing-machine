@@ -43,8 +43,7 @@ const root = document.getElementById('root')
 if (!root) {
   document.body.innerHTML = '<div style="padding: 20px; text-align: center;"><h1>Error: No root element found</h1></div>'
 } else {
-  // Show loading state immediately
-  root.innerHTML = '<div style="padding: 40px; text-align: center; font-family: sans-serif;"><h1>🔄 Marketing Machine</h1><p>⚡ Initializing React App...</p><p style="font-size: 12px; color: #666;">If you see this message, the app is starting up.</p></div>'
+  console.log('✅ Root element found, starting React app...');
   
   try {
     console.log('Attempting to render React app...');
@@ -64,17 +63,39 @@ if (!root) {
     
     console.log('React app render completed');
   } catch (error) {
-    console.error('React render failed, trying fallback:', error);
-    root.innerHTML = `
-      <div style="padding: 40px; text-align: center; font-family: sans-serif;">
-        <h1>Marketing Machine</h1>
-        <p style="color: red;">Error loading application: ${error.message}</p>
-        <p>Check browser console for details</p>
-        <details>
-          <summary>Technical Details</summary>
-          <pre style="text-align: left; background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 4px;">${error.stack}</pre>
-        </details>
+    console.error('❌ React render failed:', error);
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
+    
+    // Show detailed error in UI
+    const errorHTML = `
+      <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: system-ui; background: #fef2f2; padding: 20px;">
+        <div style="background: white; padding: 40px; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); max-width: 600px; border-left: 4px solid #ef4444;">
+          <h1 style="color: #dc2626; margin-bottom: 20px; font-size: 1.5rem;">⚠️ React App Failed to Load</h1>
+          <p style="color: #374151; margin-bottom: 16px;"><strong>Error:</strong> ${error.message}</p>
+          <details style="margin-top: 20px;">
+            <summary style="cursor: pointer; color: #6b7280; font-weight: 600;">Technical Details</summary>
+            <pre style="background: #f9fafb; padding: 12px; border-radius: 6px; overflow-x: auto; font-size: 12px; margin-top: 10px;">${error.stack}</pre>
+          </details>
+          <div style="margin-top: 24px; padding: 16px; background: #f0f9ff; border-radius: 8px;">
+            <h3 style="color: #1e40af; margin: 0 0 8px 0;">Troubleshooting:</h3>
+            <ul style="color: #374151; margin: 0; padding-left: 20px;">
+              <li>Check browser console for additional errors</li>
+              <li>Verify Clerk authentication key is configured</li>
+              <li>Try refreshing the page</li>
+            </ul>
+          </div>
+          <button onclick="window.location.reload()" style="margin-top: 20px; background: #3b82f6; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer;">
+            Reload Page
+          </button>
+        </div>
       </div>
-    `
+    `;
+    
+    // Replace the loading content with error message
+    root.innerHTML = errorHTML;
   }
 }
