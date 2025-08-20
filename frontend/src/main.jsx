@@ -2,8 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { ClerkProvider } from '@clerk/clerk-react'
-import App from './App.jsx'
-import SimpleApp from './SimpleApp.jsx'
+import ClerkApp from './ClerkApp.jsx'
 import ErrorBoundary from './components/ErrorBoundary.jsx'
 import './styles/index.css'
 
@@ -48,33 +47,27 @@ if (!root) {
   try {
     console.log('Attempting to render React app...');
     
-    // Try to render with Clerk, fallback to simplified version
-    try {
-      ReactDOM.createRoot(root).render(
-        <React.StrictMode>
-          <ErrorBoundary>
-            <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-              <BrowserRouter>
-                <App />
-              </BrowserRouter>
-            </ClerkProvider>
-          </ErrorBoundary>
-        </React.StrictMode>
-      )
-      console.log('✅ Full Clerk app loaded successfully');
-    } catch (clerkError) {
-      console.warn('⚠️ Clerk failed, using simplified auth:', clerkError.message);
-      // Fallback to simplified version without Clerk
-      ReactDOM.createRoot(root).render(
-        <React.StrictMode>
-          <ErrorBoundary>
+    // Render ClerkApp with proper error handling
+    ReactDOM.createRoot(root).render(
+      <React.StrictMode>
+        <ErrorBoundary>
+          <ClerkProvider 
+            publishableKey={PUBLISHABLE_KEY}
+            appearance={{
+              baseTheme: undefined,
+              layout: {
+                socialButtonsPlacement: 'bottom',
+                socialButtonsVariant: 'blockButton'
+              }
+            }}
+          >
             <BrowserRouter>
-              <SimpleApp />
+              <ClerkApp />
             </BrowserRouter>
-          </ErrorBoundary>
-        </React.StrictMode>
-      )
-    }
+          </ClerkProvider>
+        </ErrorBoundary>
+      </React.StrictMode>
+    )
     
     console.log('React app render completed');
   } catch (error) {
