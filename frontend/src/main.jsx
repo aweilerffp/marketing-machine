@@ -7,8 +7,8 @@ import ErrorBoundary from './components/ErrorBoundary.jsx'
 import './styles/index.css'
 
 
-// Import Clerk Publishable Key with hardcoded fallback for production
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || 'pk_test_Y3VkZGx5LXNoZWVwLTAuY2xlcmsuYWNjb3VudHMuZGV2JA'
+// Import Clerk Publishable Key - Production key for trymarketingmachine.com
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || 'pk_live_Y2xlcmsudHJ5bWFya2V0aW5nbWFjaGluZS5jb20k'
 
 console.log('=== MARKETING MACHINE DEBUG INFO ===');
 console.log('Environment variables check:');

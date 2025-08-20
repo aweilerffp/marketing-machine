@@ -238,10 +238,13 @@ function SignInPage() {
         <SignIn 
           afterSignInUrl="/dashboard"
           signUpUrl="/sign-up"
+          redirectUrl="/dashboard"
           appearance={{
             elements: {
               rootBox: { width: '100%' },
-              card: { backgroundColor: 'transparent', boxShadow: 'none' }
+              card: { backgroundColor: 'transparent', boxShadow: 'none' },
+              headerTitle: { fontSize: '1.5rem' },
+              headerSubtitle: { color: '#6b7280' }
             }
           }}
         />
@@ -294,10 +297,13 @@ function SignUpPage() {
         <SignUp 
           afterSignUpUrl="/dashboard"
           signInUrl="/sign-in"
+          redirectUrl="/dashboard"
           appearance={{
             elements: {
               rootBox: { width: '100%' },
-              card: { backgroundColor: 'transparent', boxShadow: 'none' }
+              card: { backgroundColor: 'transparent', boxShadow: 'none' },
+              headerTitle: { fontSize: '1.5rem' },
+              headerSubtitle: { color: '#6b7280' }
             }
           }}
         />
